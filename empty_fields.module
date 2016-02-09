@@ -226,8 +226,8 @@ function empty_fields_field_attach_view_alter(&$output, $context) {
 
     if ($plugin) {
       $markup = $plugin->react($context);
-      // Do not render empty values.
-      if (!empty($markup) || drupal_strlen($markup)) {
+      // It will render empty values.
+      if (isset($markup)) {
         if (empty($context['language'])) {
           $language = field_language($entity_type, $entity, $field_name);
         }
