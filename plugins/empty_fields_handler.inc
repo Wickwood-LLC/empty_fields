@@ -53,4 +53,15 @@ abstract class EmptyFieldHandler {
 
   }
 
+  /**
+   * Array field formatter machine names.
+   * If returned array is non-empty then the plugin will be limitted to
+   * specified field formatters.
+   *
+   * @return array
+   */
+  public function fieldFormatters() {
+    return array();
+  }
+
 }
