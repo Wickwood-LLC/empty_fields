@@ -82,6 +82,9 @@ function empty_fields_empty_fields() {
     'EmptyFieldText' => array(
       'title' => t('Display Custom Text'),
     ),
+    'EmptyFieldCollection' => array(
+      'title' => t('Show empty field collection'),
+    ),
   );
   return $items;
 }
