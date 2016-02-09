@@ -276,9 +276,9 @@ function empty_fields_field_attach_view_alter(&$output, $context) {
 function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contexts) {
   // Consider empty field panes only.
   if (empty($content) && $pane->type == 'entity_field' && !empty($pane->subtype)) {
-    $plugin = ctools_get_content_type($pane->type);
+    $ctools_plugin = ctools_get_content_type($pane->type);
     $conf = $pane->configuration;
-    $pane_context = ctools_content_select_context($plugin, $pane->subtype, $pane->configuration, $contexts);
+    $pane_context = ctools_content_select_context($ctools_plugin, $pane->subtype, $pane->configuration, $contexts);
     $entity = $pane_context->data;
     // Early exit if entity is not present.
     // Without entity we cannot determine the field and preapre dummy output.
@@ -298,7 +298,7 @@ function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contex
     $instances = _field_invoke_get_instances($entity_type, $bundle, array('default' => TRUE, 'deleted' => FALSE, 'field_name' => $field_name));
     $instance = $instances[0];
     $field = field_info_field($field_name);
-    $display = field_get_display($instances[0], '*', $entity);
+    $display = field_get_display($instance, '*', $entity);
 
     if (empty($conf['formatter_settings']['empty_fields_handler'])) {
       return;
@@ -369,8 +369,8 @@ function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contex
           // Prepare output for field pane.
         $block = new stdClass();
         $block->module  = 'entity_field';
-        if ($pane->configuration['label'] == 'title' && isset($instances[0]['label'])) {
-          $block->title = $instances[0]['label'];
+        if ($conf['label'] == 'title' && isset($output['#title'])) {
+          $block->title = $output['#title'];
         }
 
         $block->content = $output;
