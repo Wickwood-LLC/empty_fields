@@ -302,8 +302,8 @@ function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contex
       return;
     }
 
-    list($entity_type, $field_name) = explode(':', $pane->subtype);
-    $language = entity_language($entity_type, $entity);
+    list($entity_type, $field_name) = explode(':', $pane->subtype, 2);
+    $language = field_language($entity_type, $entity, $field_name);
 
     list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     if (empty($bundle)) {
@@ -314,7 +314,6 @@ function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contex
     $instances = _field_invoke_get_instances($entity_type, $bundle, array('default' => TRUE, 'deleted' => FALSE, 'field_name' => $field_name));
     $instance = $instances[0];
     $field = field_info_field($field_name);
-    $display = field_get_display($instance, '*', $entity);
 
     if (empty($conf['formatter_settings']['empty_fields_handler'])) {
       return;
@@ -331,7 +330,17 @@ function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contex
     $view_mode = !empty($conf['formatter_settings']['view_mode']) ? $conf['formatter_settings']['view_mode'] : 'full';
 
     // Load the configured plugin.
-    $plugin = empty_fields_load_plugin($instance, $conf['formatter_settings']);
+    // Adding pane id suffix to field name.
+    // Otherwise formatter settings will be taken from entity display.
+    // Here panel formatter settings to be considered.
+    $plugin = empty_fields_load_plugin(
+      array(
+        'field_name' => $field_name . '_' . $pane->pid,
+        'entity_type' => $entity_type,
+        'bundle' => $bundle,
+      ),
+      $conf['formatter_settings']
+    );
 
     if ($plugin) {
       $context = array(
@@ -351,7 +360,6 @@ function empty_fields_panels_pane_content_alter(&$content, $pane, $args, $contex
           '#theme' => 'field',
           '#title' => $instance['label'],
           '#label_display' => $label,
-          //'#weight' => $display['weight'],
           '#field_type' => $field['type'],
           '#field_name' => $field_name,
           '#bundle' => $bundle,
