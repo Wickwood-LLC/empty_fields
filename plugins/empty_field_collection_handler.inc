@@ -67,6 +67,13 @@ class EmptyFieldCollection extends EmptyFieldHandler {
   }
 
   public function fieldFormatters() {
-    return array('field_collection_view');
+    return array('field_collection_view', 'field_collection_fields');
+  }
+
+  /**
+   * @return type
+   */
+  public function fieldTypes() {
+    return array('field_collection');
   }
 }
