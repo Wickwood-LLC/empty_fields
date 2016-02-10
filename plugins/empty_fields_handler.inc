@@ -64,4 +64,15 @@ abstract class EmptyFieldHandler {
     return array();
   }
 
+  /**
+   * Array field type machine names.
+   * If returned array is non-empty then the plugin will be limitted to
+   * specified field types.
+   *
+   * @return array
+   */
+  public function fieldTypes() {
+    return array();
+  }
+
 }
