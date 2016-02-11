@@ -238,8 +238,11 @@ function empty_fields_field_attach_view_alter(&$output, $context) {
           }
           break;
 
+        // TODO: We are trying to apply this to all fields.
+        // Watch for inconsistancies in display.
         default:
-          continue 2;
+          break;
+          //continue 2;
 
       }
     }
@@ -277,6 +280,14 @@ function empty_fields_field_attach_view_alter(&$output, $context) {
             '#markup' => $markup,
           ),
         );
+        if ($field['type'] == 'field_collection' && $display['settings']['empty_fields_handler'] == 'EmptyFieldCollection') {
+          unset($output[$field_name][0]['#markup']);
+          $output[$field_name]['#items'] = array(0 => array());
+          $fc = entity_create('field_collection_item', array('field_name' => $field_name));
+          $fcv = entity_view('field_collection_item', array($fc), $view_mode = 'full', $language);
+          $output[$field_name][0]['entity'] = $fcv;
+          //$output['#formatter'] = 'field_collection_fields';
+        }
 
         // Allow plugins to alter output.
         $plugin->alterOutput($output[$field_name], $context);
