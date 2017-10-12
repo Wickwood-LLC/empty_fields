@@ -7,3 +7,6 @@ files[] = plugins/empty_fields_handler_text.inc
 files[] = plugins/empty_field_collection_handler.inc
 dependencies[] = field
 dependencies[] = field_formatter_settings
+
+version = "7.x-2.0"
+project = "empty_fields"
